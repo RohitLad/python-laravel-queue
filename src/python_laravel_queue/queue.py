@@ -41,7 +41,7 @@ class Queue:
             self.appname + self.prefix + 'queues:' + self.queue, 60000)
         obj = json.loads(data)
         command = obj['data']['command']
-        raw = phpserialize.loads(command, object_hook=phpserialize.phpobject)
+        raw = loads(command, object_hook=phpobject)
 
         self.ee.emit(
             'queued', {'name': obj['data']['commandName'], 'data': raw._asdict()})
@@ -56,7 +56,7 @@ class Queue:
         self.redisPop()
 
     def redisPush(self, name: str, dictObj: dict, timeout: int = None, delay: int = None):
-        command = phpserialize.dumps(phpserialize.phpobject(name, dictObj))
+        command = dumps(phpobject(name, dictObj))
         data = {
         "uuid": str(uuid.uuid4()),
         "job": 'Illuminate\\Queue\\CallQueuedHandler@call',
